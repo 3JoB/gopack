@@ -62,7 +62,7 @@ func (s *SpecFile) AddDefine(value string) {
 	s.Defines = append(s.Defines, value)
 }
 
-// SetName sets packgae name
+// SetName sets package name
 func (s *SpecFile) SetName(name string) {
 	s.Header[PkgName] = name
 }

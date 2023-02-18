@@ -64,7 +64,7 @@ func New(name, version, revision, arch string) (*Rpm, error) {
 	return r, nil
 }
 
-// Close closes the rpm packge
+// Close closes the rpm package
 func (r *Rpm) Close() error {
 	return os.RemoveAll(r.workingFolder)
 }
@@ -94,7 +94,7 @@ func (r *Rpm) rpmHasValidTopDir() error {
 	return nil
 }
 
-// Create creates rpm pacage, return file name
+// Create creates rpm package, return file name
 func (r *Rpm) Create(folder string) (string, error) {
 	rpmdir, err := filepath.Abs(folder)
 	if err != nil {

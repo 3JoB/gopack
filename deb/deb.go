@@ -15,12 +15,12 @@ import (
 
 const (
 	// AMD64 amd664 arch
-	AMD64      = "amd64"
-	debControl = "control.tar.gz"
-	debData    = "data.tar.gz"
-	debData_xz = "data.tar.xz"
+	AMD64       = "amd64"
+	debControl  = "control.tar.gz"
+	debData     = "data.tar.gz"
+	debData_xz  = "data.tar.xz"
 	debData_zst = "data.tar.zst"
-	debBinary  = "debian-binary"
+	debBinary   = "debian-binary"
 )
 
 type DataCompression string
@@ -30,20 +30,20 @@ type Arch string
 
 const (
 	Compression_GZIP DataCompression = "gzip"
-	Compression_XZ DataCompression = "xz"
+	Compression_XZ   DataCompression = "xz"
 	Compression_ZSTD DataCompression = "zstd"
 
-	Arch_AMD64 Arch = "amd64"
-	Arch_IA64 Arch = "ia64"
-	Arch_X86 Arch = "i386"
-	Arch_X32 Arch = "x32"
-	Arch_Mips Arch ="mipsel"
-	Arch_Mips64 Arch = "mips64el"
-	Arch_Arm5 Arch = "armel"
-	Arch_Arm6 Arch = "armhf"
-	Arch_Arm7 Arch = Arch_Arm6
-	Arch_Arm8 Arch = "arm64"
-	Arch_Sparc Arch = "sparc"
+	Arch_AMD64   Arch = "amd64"
+	Arch_IA64    Arch = "ia64"
+	Arch_X86     Arch = "i386"
+	Arch_X32     Arch = "x32"
+	Arch_Mips    Arch = "mipsel"
+	Arch_Mips64  Arch = "mips64el"
+	Arch_Arm5    Arch = "armel"
+	Arch_Arm6    Arch = "armhf"
+	Arch_Arm7    Arch = Arch_Arm6
+	Arch_Arm8    Arch = "arm64"
+	Arch_Sparc   Arch = "sparc"
 	Arch_Sparc64 Arch = "sparc64"
 )
 
@@ -62,7 +62,7 @@ type Deb struct {
 }
 
 // New creates new deb writer
-func New(name, version, revision string,arch Arch, Compression DataCompression) (*Deb, error) {
+func New(name, version, revision string, arch Arch, Compression DataCompression) (*Deb, error) {
 	deb := new(Deb)
 	deb.Info.Package = name
 	deb.Info.Version = version

@@ -20,7 +20,7 @@ type PackageOptions struct {
 	Version     string            `json:"version"`
 	Revision    string            `json:"revision"`
 	Arch        string            `json:"arch"`
-	Compression string `json:"compression"`
+	Compression string            `json:"compression"`
 	Description string            `json:"description"`
 	Homepage    string            `json:"homepage"`
 	Depends     string            `json:"depends"`
