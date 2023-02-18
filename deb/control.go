@@ -3,10 +3,11 @@ package deb
 import (
 	"bytes"
 	"fmt"
-	"reflect"
+
+	"github.com/goccy/go-reflect"
 )
 
-//Control represents debian control structure
+// Control represents debian control structure
 type Control struct {
 	Package      string `json:"-"`
 	Version      string `json:"-"`
@@ -20,7 +21,7 @@ type Control struct {
 	Description  string `json:"description"`
 }
 
-//Bytes marshal control structure as bytes
+// Bytes marshal control structure as bytes
 func (c *Control) bytes() []byte {
 	buff := new(bytes.Buffer)
 	val := reflect.ValueOf(c).Elem()

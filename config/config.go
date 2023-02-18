@@ -1,11 +1,12 @@
 package config
 
 import (
-	"encoding/json"
-	"io/ioutil"
+	"os"
+
+	"github.com/goccy/go-json"
 )
 
-//Scripts holds scripts config
+// Scripts holds scripts config
 type Scripts struct {
 	PreInst    string `json:"pre_inst"`
 	PostInst   string `json:"post_inst"`
@@ -13,12 +14,13 @@ type Scripts struct {
 	PostUnInst string `json:"post_uninst"`
 }
 
-//PackageOptions holds package configuration details
+// PackageOptions holds package configuration details
 type PackageOptions struct {
 	Name        string            `json:"name"`
 	Version     string            `json:"version"`
 	Revision    string            `json:"revision"`
 	Arch        string            `json:"arch"`
+	Compression string `json:"compression"`
 	Description string            `json:"description"`
 	Homepage    string            `json:"homepage"`
 	Depends     string            `json:"depends"`
@@ -30,9 +32,9 @@ type PackageOptions struct {
 	Conffiles   string            `json:"conffiles"`
 }
 
-//Load loads configuration from file
+// Load loads configuration from file
 func Load(fileName string) (*PackageOptions, error) {
-	data, err := ioutil.ReadFile(fileName)
+	data, err := os.ReadFile(fileName)
 	if err != nil {
 		return nil, err
 	}

@@ -1,9 +1,10 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
 	"testing"
+
+	"github.com/goccy/go-json"
 )
 
 func TestLoad(t *testing.T) {

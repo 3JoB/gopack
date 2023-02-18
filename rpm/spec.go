@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//PkgName rpm contants
+// PkgName rpm contants
 const (
 	PkgName     = "Name"
 	PkgVersion  = "Version"
@@ -25,7 +25,7 @@ const (
 	BuildArch   = "BuildArch"
 )
 
-//SpecFile describes the spec file structure
+// SpecFile describes the spec file structure
 type SpecFile struct {
 	Header      map[string]string `json:"header"`
 	Defines     []string          `json:"defines"`
@@ -52,22 +52,22 @@ func newSpec() *SpecFile {
 	return s
 }
 
-//Depends adds package dependencies
+// Depends adds package dependencies
 func (s *SpecFile) Depends(requires ...string) {
 	s.Requires = requires
 }
 
-//AddDefine adds a define value
+// AddDefine adds a define value
 func (s *SpecFile) AddDefine(value string) {
 	s.Defines = append(s.Defines, value)
 }
 
-//SetName sets packgae name
+// SetName sets packgae name
 func (s *SpecFile) SetName(name string) {
 	s.Header[PkgName] = name
 }
 
-//SetVersion sets package version
+// SetVersion sets package version
 func (s *SpecFile) SetVersion(version string, revision string) {
 	if revision != "" {
 		s.Header[PkgVersion] = version + "_" + revision
@@ -76,17 +76,16 @@ func (s *SpecFile) SetVersion(version string, revision string) {
 	}
 }
 
-//AddFile adds a file to the package
+// AddFile adds a file to the package
 func (s *SpecFile) AddFile(name string) {
 	if strings.Contains(name, " ") {
 		s.Files = append(s.Files, fmt.Sprintf(`"%s"`, name))
 	} else {
 		s.Files = append(s.Files, name)
 	}
-
 }
 
-//Write writes the rpm to writer
+// Write writes the rpm to writer
 func (s *SpecFile) Write(writer io.Writer) error {
 	var err error
 	for _, define := range s.Defines {
@@ -107,7 +106,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 			return err
 		}
 	}
-	_, err = fmt.Fprintln(writer, "%"+"description")
+	_, err = fmt.Fprintln(writer, "% | description")
 	if err != nil {
 		return err
 	}
@@ -116,7 +115,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 		return err
 	}
 
-	_, err = fmt.Fprintln(writer, "%"+"prep")
+	_, err = fmt.Fprintln(writer, "% | prep")
 	if err != nil {
 		return err
 	}
@@ -125,7 +124,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 		return err
 	}
 
-	_, err = fmt.Fprintln(writer, "%"+"build")
+	_, err = fmt.Fprintln(writer, "% | build")
 	if err != nil {
 		return err
 	}
@@ -134,7 +133,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 		return err
 	}
 
-	_, err = fmt.Fprintln(writer, "%"+"pre")
+	_, err = fmt.Fprintln(writer, "% | pre")
 	if err != nil {
 		return err
 	}
@@ -142,7 +141,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintln(writer, "%"+"post")
+	_, err = fmt.Fprintln(writer, "% | post")
 	if err != nil {
 		return err
 	}
@@ -150,7 +149,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintln(writer, "%"+"preun")
+	_, err = fmt.Fprintln(writer, "% | preun")
 	if err != nil {
 		return err
 	}
@@ -161,7 +160,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintln(writer, "%"+"postun")
+	_, err = fmt.Fprintln(writer, "% | postun")
 	if err != nil {
 		return err
 	}
@@ -170,7 +169,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 		return err
 	}
 
-	_, err = fmt.Fprintln(writer, "%"+"files")
+	_, err = fmt.Fprintln(writer, "% | files")
 	if err != nil {
 		return err
 	}
@@ -181,7 +180,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 			return err
 		}
 	}
-	_, err = fmt.Fprintln(writer, "%"+"changelog")
+	_, err = fmt.Fprintln(writer, "% | hangelog")
 	if err != nil {
 		return err
 	}
@@ -192,7 +191,7 @@ func (s *SpecFile) Write(writer io.Writer) error {
 	return nil
 }
 
-//PackageName returns a package file name
+// PackageName returns a package file name
 func (s *SpecFile) PackageName() string {
 	return fmt.Sprintf("%s-%s-%s.%s.rpm", s.Header[PkgName], s.Header[PkgVersion], s.Header[Release], s.Header[BuildArch])
 }

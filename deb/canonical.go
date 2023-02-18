@@ -2,18 +2,16 @@ package deb
 
 import (
 	"archive/tar"
+	"bytes"
 	"compress/gzip"
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
-	"time"
-
-	"bytes"
-
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/blakesmith/ar"
 )
@@ -29,7 +27,7 @@ type canonical struct {
 func newCanonical() (*canonical, error) {
 	c := new(canonical)
 	var err error
-	c.file, err = ioutil.TempFile("", "")
+	c.file, err = os.CreateTemp("", "")
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +77,7 @@ func (c *canonical) AddLink(name string, linkName string) error {
 func (c *canonical) AddEmptyFolder(name string) error {
 	name = strings.TrimPrefix(name, "/")
 	if name == "" {
-		return fmt.Errorf("cannot add empty name for empty folder")
+		return errors.New("cannot add empty name for empty folder")
 	}
 	header := new(tar.Header)
 	header.Name = name

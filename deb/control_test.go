@@ -1,9 +1,8 @@
 package deb
 
 import (
-	"testing"
-
 	"os"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,5 +23,4 @@ func TestEnsure(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, c.emptyFolders["/var/lib"])
 	t.Log(c.emptyFolders)
-
 }

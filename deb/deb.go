@@ -2,27 +2,52 @@ package deb
 
 import (
 	"errors"
-	"time"
-
 	"fmt"
 	"os"
 	"path/filepath"
-
 	"strings"
+	"time"
 
 	"github.com/blakesmith/ar"
-	"github.com/dtylman/gopack/files"
+
+	"github.com/3JoB/gopack/files"
 )
 
 const (
-	//AMD64 amd664 arch
+	// AMD64 amd664 arch
 	AMD64      = "amd64"
 	debControl = "control.tar.gz"
 	debData    = "data.tar.gz"
+	debData_xz = "data.tar.xz"
+	debData_zst = "data.tar.zst"
 	debBinary  = "debian-binary"
 )
 
-//Deb represents a deb package
+type DataCompression string
+
+// **see** https://www.debian.org/ports/index.zh-cn.html
+type Arch string
+
+const (
+	Compression_GZIP DataCompression = "gzip"
+	Compression_XZ DataCompression = "xz"
+	Compression_ZSTD DataCompression = "zstd"
+
+	Arch_AMD64 Arch = "amd64"
+	Arch_IA64 Arch = "ia64"
+	Arch_X86 Arch = "i386"
+	Arch_X32 Arch = "x32"
+	Arch_Mips Arch ="mipsel"
+	Arch_Mips64 Arch = "mips64el"
+	Arch_Arm5 Arch = "armel"
+	Arch_Arm6 Arch = "armhf"
+	Arch_Arm7 Arch = Arch_Arm6
+	Arch_Arm8 Arch = "arm64"
+	Arch_Sparc Arch = "sparc"
+	Arch_Sparc64 Arch = "sparc64"
+)
+
+// Deb represents a deb package
 type Deb struct {
 	Data     *canonical `json:"-"`
 	Control  *canonical `json:"-"`
@@ -31,19 +56,20 @@ type Deb struct {
 	PostInst string     `json':"post_inst"`
 	PreRm    string     `json:"pre_rm"`
 	PostRm   string     `json:"post_rm"`
-	//A package declares its list of conffiles by including a conffiles file in its control archive
+
+	// A package declares its list of conffiles by including a conffiles file in its control archive
 	ConfFiles string `json:"conf_files"`
 }
 
-//New creates new deb writer
-func New(name, version, revision, arch string) (*Deb, error) {
+// New creates new deb writer
+func New(name, version, revision string,arch Arch, Compression DataCompression) (*Deb, error) {
 	deb := new(Deb)
 	deb.Info.Package = name
 	deb.Info.Version = version
 	if revision != "" {
 		deb.Info.Version += "-" + revision
 	}
-	deb.Info.Architecture = arch
+	deb.Info.Architecture = string(arch)
 	var err error
 	deb.Data, err = newCanonical()
 	if err != nil {
@@ -56,7 +82,7 @@ func New(name, version, revision, arch string) (*Deb, error) {
 	return deb, nil
 }
 
-//Create creates the deb file
+// Create creates the deb file
 func (d *Deb) Create(folder string) (string, error) {
 	if d.Info.Package == "" {
 		return "", errors.New("package name cannot be empty")
@@ -146,17 +172,17 @@ func (d *Deb) addBinary(writer *ar.Writer) error {
 	return err
 }
 
-//AddFile adds a file to package
+// AddFile adds a file to package
 func (d *Deb) AddFile(sourcePath string, targetPath string) error {
 	return d.Data.AddFile(sourcePath, targetPath)
 }
 
-//AddEmptyFolder adds empty folder to package
+// AddEmptyFolder adds empty folder to package
 func (d *Deb) AddEmptyFolder(name string) error {
 	return d.Data.AddEmptyFolder(name)
 }
 
-//AddFolder adds folder to package
+// AddFolder adds folder to package
 func (d *Deb) AddFolder(path string, prefix string) error {
 	fc, err := files.New(path)
 	if err != nil {

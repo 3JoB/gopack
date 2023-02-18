@@ -4,41 +4,40 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 
-	"github.com/dtylman/gopack/config"
-	"github.com/dtylman/gopack/rpm"
-
-	"github.com/dtylman/gopack/deb"
+	"github.com/3JoB/gopack/config"
+	"github.com/3JoB/gopack/deb"
+	"github.com/3JoB/gopack/rpm"
 )
 
-//Version is gopack version
+// Version is gopack version
 var Version = "0.0.2"
 
-//Options holds command line options
+// Options holds command line options
 var Options struct {
-	//OutPath is the output path
+	// OutPath is the output path
 	OutPath string
-	//ConfigFileName config file name
+	// ConfigFileName config file name
 	ConfigFileName string
-	//BuildRPM if true, will build RPM
+	// BuildRPM if true, will build RPM
 	BuildRPM bool
-	//BuildDeb if true, will build Deb
+	// BuildDeb if true, will build Deb
 	BuildDeb bool
-	//Version to specify in command line
+	// Version to specify in command line
 	Version string
-	//Revision to specify in command line
+	// Revision to specify in command line
 	Revision string
 }
 
-//loadFile loads from file name to value
+// loadFile loads from file name to value
 func loadFile(from string, value *string) error {
 	if from == "" {
 		return nil
 	}
-	data, err := ioutil.ReadFile(from)
+	data, err := os.ReadFile(from)
 	if err != nil {
 		return err
 	}
@@ -87,7 +86,7 @@ func createRPM(cfg *config.PackageOptions) error {
 
 func createDeb(cfg *config.PackageOptions) error {
 	log.Println("Creating deb...")
-	deb, err := deb.New(cfg.Name, cfg.Version, cfg.Revision, cfg.Arch)
+	deb, err := deb.New(cfg.Name, cfg.Version, cfg.Revision, deb.Arch(cfg.Arch), deb.DataCompression(cfg.Compression))
 	if err != nil {
 		return err
 	}

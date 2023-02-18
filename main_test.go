@@ -5,10 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dtylman/gopack/rpm"
-
 	"github.com/dtylman/gopack/deb"
-
+	"github.com/dtylman/gopack/rpm"
 	"github.com/stretchr/testify/assert"
 )
 

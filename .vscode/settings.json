@@ -1,5 +1,10 @@
 {
     "cSpell.words": [
-        "gopack"
+        "armel",
+        "armhf",
+        "Conffiles",
+        "gopack",
+        "mipsel",
+        "zstd"
     ]
 }

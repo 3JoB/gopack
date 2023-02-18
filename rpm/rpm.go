@@ -2,38 +2,36 @@ package rpm
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
-	"errors"
-
-	"github.com/dtylman/gopack/files"
+	"github.com/3JoB/gopack/files"
 )
 
 const (
-	//AMD64 architecture
+	// AMD64 architecture
 	AMD64 = "x86_64"
 )
 
-//Rpm represents rpm package
+// Rpm represents rpm package
 type Rpm struct {
 	Spec          *SpecFile `json:"spec"`
 	workingFolder string
 	buildRoot     string
 }
 
-//New creates new rpm struct
+// New creates new rpm struct
 func New(name, version, revision, arch string) (*Rpm, error) {
 	r := new(Rpm)
 	r.Spec = newSpec()
 
 	var err error
-	r.workingFolder, err = ioutil.TempDir("", name)
+	r.workingFolder, err = os.MkdirTemp("", name)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +64,7 @@ func New(name, version, revision, arch string) (*Rpm, error) {
 	return r, nil
 }
 
-//Close closes the rpm packge
+// Close closes the rpm packge
 func (r *Rpm) Close() error {
 	return os.RemoveAll(r.workingFolder)
 }
@@ -79,8 +77,8 @@ func (r *Rpm) Close() error {
 
 */
 
-//rpm sometimes defines build root to %home/_topdir *BEFORE* reading the SPEC file. And fails if does not exists.
-//https://cmake.org/pipermail/cmake/2010-October/040039.html
+// rpm sometimes defines build root to %home/_topdir *BEFORE* reading the SPEC file. And fails if does not exists.
+// https://cmake.org/pipermail/cmake/2010-October/040039.html
 func (r *Rpm) rpmHasValidTopDir() error {
 	home := os.Getenv("HOME")
 	if home == "" {
@@ -96,7 +94,7 @@ func (r *Rpm) rpmHasValidTopDir() error {
 	return nil
 }
 
-//Create creates rpm pacage, return file name
+// Create creates rpm pacage, return file name
 func (r *Rpm) Create(folder string) (string, error) {
 	rpmdir, err := filepath.Abs(folder)
 	if err != nil {
@@ -155,7 +153,7 @@ func (r *Rpm) movePackageFile(path string, info os.FileInfo, err error) error {
 	return nil
 }
 
-//AddEmptyFolder adds empty folder
+// AddEmptyFolder adds empty folder
 func (r *Rpm) AddEmptyFolder(name string) error {
 	destFolder := filepath.Join(r.buildRoot, name)
 	err := os.MkdirAll(destFolder, 0755)
@@ -166,7 +164,7 @@ func (r *Rpm) AddEmptyFolder(name string) error {
 	return nil
 }
 
-//AddFolder adds a folder and its contents
+// AddFolder adds a folder and its contents
 func (r *Rpm) AddFolder(path string, prefix string) error {
 	fc, err := files.New(path)
 	if err != nil {
@@ -183,7 +181,7 @@ func (r *Rpm) AddFolder(path string, prefix string) error {
 	return nil
 }
 
-//AddFile adds a file
+// AddFile adds a file
 func (r *Rpm) AddFile(sourcePath string, targetPath string) error {
 	sourceInfo, err := os.Stat(sourcePath)
 	if err != nil {
