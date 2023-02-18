@@ -25,7 +25,7 @@ const (
 
 type DataCompression string
 
-// **see** https://www.debian.org/ports/index.zh-cn.html
+// **see** https://www.debian.org/ports/index.html
 type Arch string
 
 const (
