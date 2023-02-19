@@ -86,7 +86,14 @@ func createRPM(cfg *config.PackageOptions) error {
 
 func createDeb(cfg *config.PackageOptions) error {
 	log.Println("Creating deb...")
-	deb, err := deb.New(cfg.Name, cfg.Version, cfg.Revision, deb.Arch(cfg.Arch), deb.DataCompression(cfg.Compression))
+	info := deb.Config{
+		Name: cfg.Name,
+		Version: cfg.Version,
+		ReVision: cfg.Revision,
+		Arch: deb.Arch(cfg.Arch),
+		Compression: deb.DataCompression(cfg.Compression),
+	}
+	deb, err := deb.New(info)
 	if err != nil {
 		return err
 	}

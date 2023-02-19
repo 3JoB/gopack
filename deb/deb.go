@@ -33,17 +33,13 @@ const (
 	Compression_XZ   DataCompression = "xz"
 	Compression_ZSTD DataCompression = "zstd"
 
-	Arch_AMD64   Arch = "amd64"
-	Arch_IA64    Arch = "ia64"
 	Arch_X86     Arch = "i386"
-	Arch_X32     Arch = "x32"
+	Arch_IA64    Arch = "ia64"
+	Arch_AMD64   Arch = "amd64"
 	Arch_Mips    Arch = "mipsel"
 	Arch_Mips64  Arch = "mips64el"
-	Arch_Arm5    Arch = "armel"
-	Arch_Arm6    Arch = "armhf"
-	Arch_Arm7    Arch = Arch_Arm6
+	Arch_Arm7    Arch = "armhf"
 	Arch_Arm8    Arch = "arm64"
-	Arch_Sparc   Arch = "sparc"
 	Arch_Sparc64 Arch = "sparc64"
 )
 
@@ -61,15 +57,23 @@ type Deb struct {
 	ConfFiles string `json:"conf_files"`
 }
 
+type Config struct{
+	Name string
+	Version string
+	ReVision string
+	Arch Arch
+	Compression DataCompression
+}
+
 // New creates new deb writer
-func New(name, version, revision string, arch Arch, Compression DataCompression) (*Deb, error) {
+func New(c Config) (*Deb, error) {
 	deb := new(Deb)
-	deb.Info.Package = name
-	deb.Info.Version = version
-	if revision != "" {
-		deb.Info.Version += "-" + revision
+	deb.Info.Package = c.Name
+	deb.Info.Version = c.Version
+	if c.ReVision != "" {
+		deb.Info.Version += "-" + c.ReVision
 	}
-	deb.Info.Architecture = string(arch)
+	deb.Info.Architecture = string(c.Arch)
 	var err error
 	deb.Data, err = newCanonical()
 	if err != nil {
